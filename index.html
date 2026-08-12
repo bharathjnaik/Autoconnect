@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1220">
+  <title>AutoConnect Karnataka</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="toast"></div>
+
+  <section id="authScreen" class="auth-screen">
+    <div class="auth-card">
+      <div class="brand"><span>🚍</span> AutoConnect <b>Karnataka</b></div>
+      <p class="muted">Smart vehicle & bus connectivity dashboard</p>
+
+      <div class="tabs">
+        <button id="loginTab" class="tab active" type="button">Login</button>
+        <button id="signupTab" class="tab" type="button">Create account</button>
+      </div>
+
+      <form id="authForm">
+        <input id="nameInput" class="input hidden" placeholder="Full name">
+        <input id="emailInput" class="input" type="email" placeholder="Email address" required>
+        <input id="passwordInput" class="input" type="password" placeholder="Password (6+ characters)" minlength="6" required>
+        <button class="primary full" type="submit" id="authBtn">Login</button>
+      </form>
+
+      <button id="demoBtn" class="secondary full" type="button">Open Demo App</button>
+      <p id="firebaseStatus" class="tiny">Checking Firebase connection…</p>
+      <p class="tiny">Firebase is used for real account login. Demo mode lets you test the buttons/UI.</p>
+    </div>
+  </section>
+
+  <section id="appScreen" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand"><span>🚍</span> AutoConnect</div>
+      <div class="nav">
+        <button class="nav-btn active" type="button" data-page="dashboard">⌂ Dashboard</button>
+        <button class="nav-btn" type="button" data-page="vehicles">🚍 Vehicles</button>
+        <button class="nav-btn" type="button" data-page="sensors">📡 Sensors</button>
+        <button class="nav-btn" type="button" data-page="alerts">⚠ Alerts</button>
+        <button class="nav-btn" type="button" data-page="profile">👤 Profile</button>
+      </div>
+      <button id="logoutBtn" class="logout" type="button">↪ Logout</button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">SMART TRANSPORT</div>
+          <h1 id="pageTitle">Dashboard</h1>
+        </div>
+        <div class="user-chip"><span id="userName">User</span><span class="online-dot"></span></div>
+      </header>
+
+      <div id="dashboardPage" class="page">
+        <div class="hero">
+          <div>
+            <span class="badge">LIVE SYSTEM</span>
+            <h2>Welcome to AutoConnect Karnataka 👋</h2>
+            <p>Monitor vehicles, sensors and safety alerts from one place.</p>
+          </div>
+          <div class="hero-icon">📡</div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><span>🚍</span><small>Total Vehicles</small><strong id="vehicleCount">0</strong></div>
+          <div class="stat"><span>🟢</span><small>Online</small><strong id="onlineCount">0</strong></div>
+          <div class="stat"><span>🌡️</span><small>Avg. Temperature</small><strong id="tempValue">31°C</strong></div>
+          <div class="stat"><span>⚠️</span><small>Active Alerts</small><strong id="alertCount">0</strong></div>
+        </div>
+
+        <div class="grid-two">
+          <div class="panel">
+            <div class="panel-head"><h3>Vehicle Status</h3><span class="live">● Live</span></div>
+            <div id="vehicleList"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>Latest Alerts</h3><button class="text-btn" type="button" data-page-link="alerts">View all</button></div>
+            <div id="alertList"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="vehiclesPage" class="page hidden">
+        <div class="section-head"><div><h2>Vehicles</h2><p>Manage connected buses and vehicles.</p></div><button id="addVehicleBtn" class="primary" type="button">+ Add vehicle</button></div>
+        <div class="panel"><div id="allVehicles"></div></div>
+      </div>
+
+      <div id="sensorsPage" class="page hidden">
+        <div class="section-head"><div><h2>Sensor Monitor</h2><p>Real-time health overview.</p></div><button id="refreshSensors" class="secondary" type="button">↻ Refresh</button></div>
+        <div class="sensor-grid">
+          <div class="sensor"><span>🌡️</span><small>Engine Temperature</small><strong id="engineTemp">82°C</strong><em>Normal</em></div>
+          <div class="sensor"><span>🔋</span><small>Battery</small><strong>84%</strong><em>Healthy</em></div>
+          <div class="sensor"><span>🛞</span><small>Tyre Pressure</small><strong>34 PSI</strong><em>Normal</em></div>
+          <div class="sensor"><span>⛽</span><small>Fuel Level</small><strong>68%</strong><em>Good</em></div>
+          <div class="sensor"><span>📍</span><small>GPS</small><strong>Connected</strong><em>Live</em></div>
+          <div class="sensor"><span>🧭</span><small>Speed</small><strong id="speedValue">42 km/h</strong><em>Safe</em></div>
+        </div>
+      </div>
+
+      <div id="alertsPage" class="page hidden">
+        <div class="section-head"><div><h2>Safety Alerts</h2><p>Important events from connected vehicles.</p></div></div>
+        <div class="panel" id="allAlerts"></div>
+      </div>
+
+      <div id="profilePage" class="page hidden">
+        <div class="profile-card">
+          <div class="avatar" id="avatar">U</div>
+          <h2 id="profileName">User</h2>
+          <p id="profileEmail" class="muted"></p>
+          <div class="profile-row"><span>Account</span><b id="accountStatus">Demo mode</b></div>
+          <div class="profile-row"><span>Project</span><b>AutoConnect Karnataka</b></div>
+        </div>
+      </div>
+    </main>
+  </section>
+
+  <!-- Firebase compat SDK: easier to run in SPCK Editor/Preview -->
+  <script src="https://www.gstatic.com/firebasejs/12.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/12.7.1/firebase-firestore-compat.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
